@@ -60,7 +60,7 @@ def validate_data(values):
 
 def update_sales_worksheet(data):
     """
-    update sales worksheet, add new row with the list data privided.
+    update sales worksheet, add new row with the list data provided.
     """
     print('Updating sales worksheet.\n')
     sales_worksheet = SHEET.worksheet('sales')
@@ -68,6 +68,19 @@ def update_sales_worksheet(data):
     sales_worksheet.append_row(data)
     """ fügt eine Row ins worksheet hinzu """
     print('Sales worksheet updated successfuly.\n')
+
+
+def update_surplus_worksheet(data):
+    """
+    update surplus worksheet, add new row with the list data provided.
+    """
+    print('Updating surplus worksheet.\n')
+    surplus_worksheet = SHEET.worksheet('surplus')
+    """ data from Ex-file - surplus """
+    surplus_worksheet.append_row(data)
+    """ fügt eine Row ins worksheet hinzu """
+    print('Surplus worksheet updated successfuly.\n')
+
 
 def calculate_surplus_data(sales_row):
     """
@@ -83,6 +96,7 @@ def calculate_surplus_data(sales_row):
     """
     suplus_data = []
     for stock, sales in zip(stock_row, sales_row):
+        """ loop durch 2 lists gleichzeitig """
         surplus = int(stock) - sales
         suplus_data.append(surplus)
 
@@ -97,8 +111,10 @@ def main():
     data = get_sales_data()
     sales_data = [int(num) for num in data]
     update_sales_worksheet(sales_data)
-    new_suplus_data = calculate_surplus_data(sales_data)
-    print(new_suplus_data)
+    new_surplus_data = calculate_surplus_data(sales_data)
+    """ print(new_suplus_data) """
+    update_surplus_worksheet(new_surplus_data)
+
 
 print('Welcome to Love Sanwiches - Data Automation')
 main()
