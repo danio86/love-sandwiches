@@ -123,6 +123,22 @@ def get_last_5_entires_sales():
         """ holt die letzten 5 """
     return columns
 
+def calculate_stock_data(data):
+    """
+    calculate the average stoch for each item-type adding 10%
+    """
+    print('Calculating stock data...\n')
+    new_stock_data = []
+
+    for column in data:
+        int_column = [int(num) for num in column]
+        average = sum(int_column)/len(int_column)
+        stock_num = average * 1.1
+        new_stock_data.append(round(stock_num))
+    return new_stock_data
+
+
+
 
 def main():
     """
@@ -135,8 +151,9 @@ def main():
     """ print(new_suplus_data) """
     update_worksheet(new_surplus_data, 'surplus')
     """ called die function and changes 'surplus'sheet in Ex tabelle """
-
+    sales_columns = get_last_5_entires_sales()
+    stock_data = calculate_stock_data(sales_columns)
+    update_worksheet(stock_data, 'stock')
 
 print('Welcome to Love Sanwiches - Data Automation')
-""" main() """
-sales_columns = get_last_5_entires_sales()
+main()
