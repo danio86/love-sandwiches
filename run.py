@@ -1,20 +1,19 @@
 import gspread
 from google.oauth2.service_account import Credentials
-""" nur die KLasse (Credentials) aus der libary (google.oauth2.service_account) wird importiert """
-from pprint import pprint
+#only class (Credentials) from libary (google.oauth2.service_account) gets imported
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
     ]
-""" Großgeschriebene Variabelen sind Konstante, die nicht verändert werden sollten """
+#Uppercase Variabelen are constats, shouldnt be changed
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('love_sandwiches') 
-""" das ist der name vom EXCEL-file """
+#thats the name of the EXCEL-file
 
 """ sales = SHEET.worksheet('sales') 
 das ist eine sheet aus dem Ex-file
@@ -31,7 +30,8 @@ def get_sales_data():
         print('Data shoud be six numbers, seperetated by commas')
         print('Example: 10, 20 ,30, 40 ,50, 60\n')
 
-        data_str = input('Enter your data here: ')
+        data_str = input('Enter your data here: \n')
+        #use allways \n in inputs!
         sales_data = data_str.split(',')
 
         if validate_data(sales_data):
@@ -42,7 +42,7 @@ def get_sales_data():
 
 def validate_data(values):
     """
-    converts values ti int, raises valueErrors 
+    converts values to int, raises valueErrors 
     if not 6 numbers or vales can't be converted
     """
     try:
@@ -52,7 +52,7 @@ def validate_data(values):
                 f'Exactly 6 numbers! You provided {len(values)} numbers'
             )
     except ValueError as e:
-        """ e wird zu variable """
+        """ e gets a variable """
         print(f'Invalid data: {e}! Please try again!\n')
         return False
 
@@ -83,7 +83,7 @@ def update_surplus_worksheet(data):
 def update_worksheet(data, worksheet):
     """
     Gets a list of data and puts it into the worksheet.
-    kombiniert die beiden vorherigen functions
+    combines the two functions before
     """
     print(f'Updating {worksheet} worksheet.\n')
     worksheet_to_update = SHEET.worksheet(worksheet)
@@ -97,15 +97,10 @@ def calculate_surplus_data(sales_row):
     """
     print('Calculate surplus data.../n')
     stock = SHEET.worksheet('stock').get_all_values()
-    """ pprint(stock) """
     stock_row = stock[-1]
-    """ 
-    print(f'stock_row: {stock_row}')
-    print(f'sales_row: {sales_row}') 
-    """
     suplus_data = []
     for stock, sales in zip(stock_row, sales_row):
-        """ loop durch 2 lists gleichzeitig """
+        """ loop durch 2 lists at the same time """
         surplus = int(stock) - sales
         suplus_data.append(surplus)
 
@@ -120,7 +115,7 @@ def get_last_5_entires_sales():
     for ind in range(1,7):
         column = sales.col_values(ind)
         columns.append(column[-5:])
-        """ holt die letzten 5 """
+        """ takes the last 5 """
     return columns
 
 def calculate_stock_data(data):
@@ -148,9 +143,8 @@ def main():
     sales_data = [int(num) for num in data]
     update_worksheet(sales_data, 'sales')
     new_surplus_data = calculate_surplus_data(sales_data)
-    """ print(new_suplus_data) """
     update_worksheet(new_surplus_data, 'surplus')
-    """ called die function and changes 'surplus'sheet in Ex tabelle """
+    #called die function and changes 'surplus'sheet in Ex tabelle
     sales_columns = get_last_5_entires_sales()
     stock_data = calculate_stock_data(sales_columns)
     update_worksheet(stock_data, 'stock')
