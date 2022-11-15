@@ -39,6 +39,7 @@ def validate_data(values):
     if not 6 numbers or vales can't be converted
     """
     try:
+        [int(values) for values in values]
         if len(values) !=6:
             raise ValueError(
                 f'Exactly 6 numbers! You provided {len(values)} numbers'
